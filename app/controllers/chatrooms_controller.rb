@@ -1,5 +1,5 @@
 class ChatroomsController < ApplicationController
-
+    layout 'chat'
     def index
         if params[:info]
             @chatroom = Chatroom.find_or_create_by(name: params[:info])

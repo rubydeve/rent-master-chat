@@ -1,4 +1,4 @@
-class ChatsController < ApplicationController
+class ChatsController < ApplicationController    
     before_action :authenticate_user!
     def index
         @chatrooms = Chatroom.all

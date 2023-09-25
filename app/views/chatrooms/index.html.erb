@@ -1,16 +1,19 @@
-<div class="container-fluid full-page bg-dark position-relative">
-  <div class="popup-wrapper bg-white col-3 p-0 ">
-    <div class="popup-head bg-info p-1">
-      <p>Chat with support</p>
+<div class="floating-chat" data-info="<%= @chatroom.name %>">
+    <i class="fa fa-comments" aria-hidden="true"></i>
+    <div class="chat">
+        <div class="header">
+          <span class="title">
+              Chat with support
+          </span>
+          <button class='close'>
+              <i class="fa fa-times" aria-hidden="true"></i>
+          </button>
+        </div>
+        <ul class="messages">
+        </ul>
+        <div class="footer">
+            <textarea class="text-box" data-behavior="user-help" id="message" style="resize: none;border: 0;box-shadow: none;" rows="2" ></textarea>
+            <button id="sendMessage">send</button>
+        </div>
     </div>
-    <div class="chat-wrapper bg-light px-1 helper-chat" data-info="<%= @chatroom.name %>">
-      <div class="chats">
-      </div>
-      <div class="chat-form">
-          <div class="field">
-            <input data-behavior="user-help" id="message" class="form-control" required="required" placeholder="Enter your message" type="text" name="chat[message]">
-          </div>
-      </div>
-    </div>
-  </div>
 </div>

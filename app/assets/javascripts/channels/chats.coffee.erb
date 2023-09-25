@@ -1,38 +1,27 @@
 $(document).on 'turbolinks:load', ->
-  instanceVariableValue = $('.helper-chat').data('info')
+  instanceVariableValue = $('.floating-chat').data('info')
   current_user = $('#db-wrapper').data('current_user')
+  input = $('[data-behavior="user-help"]')
   if !current_user
-    console.log(current_user)
     App.room = App.cable.subscriptions.create { channel: "ChatsChannel", room: instanceVariableValue },
-        connected: ->
-      # Called when the subscription is ready for use on the server
-        disconnected: ->
-      # Called when the subscription has been terminated by the server
-        received: (data) ->
-          if data.by
-            $('.chats').append """
-              <div class="chat-bubble-wrapper d-block">
-                <div class="chat-bubble bg-dark p-1 text-white my-1 d-inline-block">
-                  <small class="chat-username">
-                    #{if data.by then 'customer support' else 'customer'}
-                  </small>
-                  <p class="m-0 chat-message">#{data.message}</p>
-                </div>
-              </div>
-            """
-          else
-            $('.chats').append """
-              <div class="chat-bubble-wrapper d-block">
-                <div class="chat-bubble bg-dark p-1 text-white my-1 d-inline-block">
-                  <small class="chat-username">#{if data.by then 'customer support' else 'customer'}</small>
-                  <p class="m-0 chat-message">#{data.message}</p>
-                </div>
-              </div>
-            """
-        speak: (message) ->
-          @perform 'speak', message: message
-    $(document).on 'keypress', '[data-behavior~=user-help]', (event) ->
-        if event.keyCode is 13 # return = send
-          App.room.speak event.target.value
-          event.target.value = ''
-          event.preventDefault()
+      connected: ->
+      disconnected: ->
+      received: (data) ->
+        if data.by
+          $('.messages').append """
+            <li class="self">#{data.message}</li>
+          """
+        else
+          $('.messages').append """
+            <li class="other">#{data.message}</li>
+          """
+      speak: ->
+        if input.val().length
+          @perform 'speak', message: input.val()
+          input.val('')
+    $(document).on 'keypress', 'textarea[data-behavior="user-help"]', (event) ->
+      console.log('ssssssssssssssssssssssssssssssssssssssss')
+      if event.keyCode is 13 # return = send
+        App.room.speak()
+    $(document).on 'click', '#sendMessage', (event) ->
+      App.room.speak()

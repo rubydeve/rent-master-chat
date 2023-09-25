@@ -13,8 +13,5 @@
 //= require rails-ujs
 //= require turbolinks
 //= require jquery3
-//= require popper
-//= require bootstrap
+//= require chat/chat
 //= require cable
-//= require_tree ./app_js
-
