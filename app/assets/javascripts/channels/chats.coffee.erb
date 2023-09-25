@@ -1,0 +1,38 @@
+$(document).on 'turbolinks:load', ->
+  instanceVariableValue = $('.helper-chat').data('info')
+  current_user = $('#db-wrapper').data('current_user')
+  if !current_user
+    console.log(current_user)
+    App.room = App.cable.subscriptions.create { channel: "ChatsChannel", room: instanceVariableValue },
+        connected: ->
+      # Called when the subscription is ready for use on the server
+        disconnected: ->
+      # Called when the subscription has been terminated by the server
+        received: (data) ->
+          if data.by
+            $('.chats').append """
+              <div class="chat-bubble-wrapper d-block">
+                <div class="chat-bubble bg-dark p-1 text-white my-1 d-inline-block">
+                  <small class="chat-username">
+                    #{if data.by then 'customer support' else 'customer'}
+                  </small>
+                  <p class="m-0 chat-message">#{data.message}</p>
+                </div>
+              </div>
+            """
+          else
+            $('.chats').append """
+              <div class="chat-bubble-wrapper d-block">
+                <div class="chat-bubble bg-dark p-1 text-white my-1 d-inline-block">
+                  <small class="chat-username">#{if data.by then 'customer support' else 'customer'}</small>
+                  <p class="m-0 chat-message">#{data.message}</p>
+                </div>
+              </div>
+            """
+        speak: (message) ->
+          @perform 'speak', message: message
+    $(document).on 'keypress', '[data-behavior~=user-help]', (event) ->
+        if event.keyCode is 13 # return = send
+          App.room.speak event.target.value
+          event.target.value = ''
+          event.preventDefault()

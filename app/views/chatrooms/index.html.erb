@@ -1,0 +1,16 @@
+<div class="container-fluid full-page bg-dark position-relative">
+  <div class="popup-wrapper bg-white col-3 p-0 ">
+    <div class="popup-head bg-info p-1">
+      <p>Chat with support</p>
+    </div>
+    <div class="chat-wrapper bg-light px-1 helper-chat" data-info="<%= @chatroom.name %>">
+      <div class="chats">
+      </div>
+      <div class="chat-form">
+          <div class="field">
+            <input data-behavior="user-help" id="message" class="form-control" required="required" placeholder="Enter your message" type="text" name="chat[message]">
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

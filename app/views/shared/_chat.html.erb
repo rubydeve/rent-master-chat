@@ -1,0 +1,12 @@
+<% if current_user %>
+    <% if chat.user? %>
+        <div class="d-flex w-lg-40 mb-4">
+            <%= render partial: "/shared/message", object: chat, locals: {is_admin: true} %>
+        </div>
+    <% else %>
+        <div class="d-flex justify-content-end mb-4">
+            <%= render partial: "/shared/message", object: chat, locals: {is_admin: false} %>
+        </div>
+    <% end %>
+<% else %>
+<% end %>
