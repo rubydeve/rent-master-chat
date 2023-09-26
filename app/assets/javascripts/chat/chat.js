@@ -12,15 +12,13 @@ element.click(openElement);
 element1.click(closeElement)
 function openElement() {
     var messages = element.find('.messages');
-    var textInput = element.find('.text-box');
     element.find('>i').hide();
     element.addClass('expand');
     element.find('.chat').addClass('enter');
-    var strLength = textInput.val().length * 2;
-    textInput.keydown(onMetaAndEnter).prop("disabled", false).focus();
     element.off('click', openElement);
     element.find('.header button').click(closeElement);
     messages.scrollTop(messages.prop("scrollHeight"));
+    window.parent.postMessage({message: 'open'}, '*');
 }
 
 function closeElement() {
@@ -28,17 +26,11 @@ function closeElement() {
     element.find('>i').show();
     element.removeClass('expand');
     element.find('.header button').off('click', closeElement);
-    element.find('.text-box').off('keydown', onMetaAndEnter).prop("disabled", true).blur();
     setTimeout(function() {
         element.find('.chat').removeClass('enter').show()
         element.click(openElement);
     }, 500);
+    window.parent.postMessage({message: 'close'}, '*');
 }
 
-
-function onMetaAndEnter(event) {
-    if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
-        sendNewMessage();
-    }
-}
 })

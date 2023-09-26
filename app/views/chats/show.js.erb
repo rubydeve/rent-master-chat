@@ -27,7 +27,7 @@ function sendMessage(){
     input.val('')
 }
 
-$('button').on('keypress', '[data-send="send"]', sendMessage)
+$(document).on('click', '[data-send="send"]', sendMessage)
 $(document).on('keypress', '[data-behavior~=user-help]', function(event) {
     if (event.keyCode === 13) {
         sendMessage()

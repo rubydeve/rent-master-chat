@@ -20,7 +20,6 @@ $(document).on 'turbolinks:load', ->
           @perform 'speak', message: input.val()
           input.val('')
     $(document).on 'keypress', 'textarea[data-behavior="user-help"]', (event) ->
-      console.log('ssssssssssssssssssssssssssssssssssssssss')
       if event.keyCode is 13 # return = send
         App.room.speak()
     $(document).on 'click', '#sendMessage', (event) ->
