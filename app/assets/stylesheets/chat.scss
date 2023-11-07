@@ -12,5 +12,11 @@
  *
  *= require chat/chat
  *= require chat/font-awesome.min
-
+ *= require shared/icons.css
  */
+
+ .bx-check-double:before {
+    position: absolute;
+    bottom: -14px;
+    right: 0;
+}

@@ -1,20 +1,25 @@
-// This is a manifest file that'll be compiled into application.js, which will include all the files
-// listed below.
-//
-// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, or any plugin's
-// vendor/assets/javascripts directory can be referenced here using a relative path.
-//
-// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
-// compiled file. JavaScript code in this file should be added after the last require_* statement.
-//
-// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
-// about supported directives.
-//
+
 //= require rails-ujs
 //= require turbolinks
 //= require jquery3
 //= require popper
 //= require bootstrap
-//= require cable
-//= require_tree ./app_js
+//= require cabMain
+//= require app_js/chat
+//= require app_js/simplebar.min
+//= require app_js/bootstrap.bundle.min
+
+
+var bars = []
+window.simplebars = function(){
+    var simples = $('div[data-bar=""]')
+    simples.each((_,el) => {
+        var bar = new SimpleBar(el, { autoHide: false });
+        bars.push(bar)
+    });
+}
+$('document').ready(function(){
+    window.simplebars()
+}) 
+
 

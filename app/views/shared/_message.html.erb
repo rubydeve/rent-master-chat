@@ -1,6 +1,6 @@
 
 <div class="<%= is_admin ? 'ms-3' : 'me-3 text-end' %>">
-    <small> 09:35</small>
+    <small><%= message.created_at.strftime("%m/%d %H:%M") %></small>
     <div class="d-flex">
         <div class="card mt-2 <%= is_admin ? 'rounded-top-md-left-0' : 'rounded-top-md-end-0 bg-primary text-white' %>">
             <div class="card-body p-3 <%= 'text-start' if !is_admin %>">
@@ -10,4 +10,7 @@
             </div>
         </div>
     </div>
+    <% if !is_admin %>
+        <i class="info bx <%= message.read ? "bx-check-double" : "bx-check" %>"></i>
+    <% end %>
 </div>

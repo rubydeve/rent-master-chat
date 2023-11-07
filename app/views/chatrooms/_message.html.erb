@@ -1,0 +1,11 @@
+<% if message.admin? %>
+    <li class="self <%= 'unread' if !message.read %>" data-token="<%= message.id %>"><%= message.message %></li>
+<% else %>
+    <li class="other" data-token="<%= message.id %>"><%= message.message %>
+        <% if !message.read %>
+            <i class="bx bx-check"></i>
+        <% else %>
+            <i class="bx bx-check-double"></i>
+        <% end %>
+    </li>
+<% end %>

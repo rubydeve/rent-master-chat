@@ -1,6 +1,6 @@
 <% if current_user %>
     <% if chat.user? %>
-        <div class="d-flex w-lg-40 mb-4">
+        <div class="d-flex w-lg-40 mb-4 check-chat <%= chat.read ? 'read' : 'unread' %>" data-token="<%= chat.id %>" >
             <%= render partial: "/shared/message", object: chat, locals: {is_admin: true} %>
         </div>
     <% else %>
@@ -8,5 +8,4 @@
             <%= render partial: "/shared/message", object: chat, locals: {is_admin: false} %>
         </div>
     <% end %>
-<% else %>
 <% end %>

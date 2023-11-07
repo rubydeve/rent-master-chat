@@ -7,5 +7,4 @@ Rails.application.routes.draw do
   resources :chats
   get '/dashboard', to: 'chats#index'
   root 'chatrooms#index'
-
 end

@@ -2,25 +2,51 @@ $(document).on 'turbolinks:load', ->
   instanceVariableValue = $('.floating-chat').data('info')
   current_user = $('#db-wrapper').data('current_user')
   input = $('[data-behavior="user-help"]')
-  if !current_user
+  console.log(current_user)
+  if current_user == undefined
     App.room = App.cable.subscriptions.create { channel: "ChatsChannel", room: instanceVariableValue },
       connected: ->
       disconnected: ->
       received: (data) ->
-        if data.by
-          $('.messages').append """
-            <li class="self">#{data.message}</li>
-          """
+        if data.read
+          if !data.by
+            i = $("""li[data-token=#{data.token}]""").find('i')
+            i.removeClass('bx bx-check')
+            i.addClass('bx bx-check-double')
         else
-          $('.messages').append """
-            <li class="other">#{data.message}</li>
-          """
+          if data.by
+            newMessage = document.createElement('li');
+            newMessage.className = 'self unread';
+            newMessage.textContent = data.message;
+            newMessage.dataset.token = data.token;
+            $('.messages').append(newMessage)
+            observer.observe(newMessage);
+            audio = new Audio('./notification.mp3');
+            audio.play();
+          else
+            $('.messages').append """
+              <li class="other" data-token="#{data.token}">#{data.message}<i class="bx bx-check"></i></li>
+            """
+      read: (token) -> 
+        @perform 'read', token: token
       speak: ->
         if input.val().length
           @perform 'speak', message: input.val()
           input.val('')
     $(document).on 'keypress', 'textarea[data-behavior="user-help"]', (event) ->
-      if event.keyCode is 13 # return = send
+      if event.keyCode is 13
         App.room.speak()
     $(document).on 'click', '#sendMessage', (event) ->
       App.room.speak()
+    chatMessages = document.querySelectorAll('.unread')
+    observer = new IntersectionObserver((entries) ->
+      entries.forEach (entry) ->
+        if entry.isIntersecting
+          entry.target.classList.remove 'unread'
+          entry.target.classList.add 'read'
+          console.log(entry.target)
+          App.room.read(entry.target.dataset.token)
+          observer.unobserve entry.target
+    )
+    chatMessages.forEach (chatMessage) ->
+      observer.observe chatMessage

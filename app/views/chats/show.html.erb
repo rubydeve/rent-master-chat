@@ -1,0 +1,129 @@
+<div class="chat-layout" id="db-wrapper">
+  <main id="page-content" style="margin: 0;">
+    <section class="container-fluid px-0">
+      <div class="row g-0">
+        <div class="col-xl-3 col-lg-12 col-md-12 col-12">
+          <div class="bg-white border-end border-top vh-100">
+            <div class=" chat-window">
+              <div class="chat-sticky-header sticky-top bg-white">
+                <ul class="nav nav-line-bottom" id="tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active py-2" id="recent-tab" data-bs-toggle="pill" href="#recent" role="tab" aria-controls="recent" aria-selected="true">Login user</a>
+                  </li>
+                </ul>
+              </div>
+              <div data-bar="" style="height: 100vh; overflow: auto;">
+                <div class="tab-content" id="tabContent">
+                  <div class="tab-pane fade show active" id="recent" role="tabpanel" aria-labelledby="recent-tab">
+                    <ul class="list-unstyled contacts-list">
+                      <%= render partial: 'user', collection: @chatrooms %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-9 col-lg-12 col-md-12 col-12">
+          <div class=" chat-body w-100 vh-100" >
+            <div class="px-4 py-4 " style='height: 90%' id='chats-info' data-bar="">
+                <%= render partial: "/shared/chat", collection: @chats  %>
+            </div>
+            <div class="bg-light px-4 py-3 chat-footer mt-auto">
+              <div class="bg-white p-2 rounded-3 shadow-sm">
+                <div class="position-relative">
+                  <input data-behavior="user-help" class="form-control border-0 form-control-simple no-resize" placeholder="Type a New Message" rows="1">
+                </div>
+                <div class="position-absolute end-0 mt-n7 me-4">
+                  <button data-send="send" class="fs-3 btn text-primary btn-focus-none">
+                    <i class="fe fe-send"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+    $(document).on('turbolinks:load', function() {
+        var Approom = App.cable.subscriptions.create({
+            channel: "ChatsChannel",
+            room: <%= @chatroom.name.try(:to_i) %>
+        }, {
+            connected: function() {},
+            disconnected: function() {},
+            received: function(data) {
+                window.simplebars()
+                if (data.read){
+                    if(data.by){
+                        var div = $(`div[data-token=${data.token}]`)
+                        var info = div.find('.info')
+                        info.removeClass('bx-check')
+                        info.addClass('bx-check-double')
+                    }
+                } else {
+                    if (data.by) {
+                        $('#chats-info .simplebar-content').append(`<div class="d-flex justify-content-end mb-4" data-token="${data.token}"> <div class="me-3 text-end"> <small> 09:35</small> <div class="d-flex"> <div class="card mt-2 rounded-top-md-end-0 bg-primary text-white"> <div class="card-body p-3 text-start"> <p class="mb-0 "> ${data.message}</p> </div> </div> </div><i class="info bx bx-check"></i></div> </div>`)
+                    } else {
+                        $('#chats-info .simplebar-content').append(`<div class="d-flex w-lg-40 mb-4 unread" data-token="${data.token}"> <div class="ms-3"> <small> 09:35</small> <div class="d-flex"> <div class="card mt-2 rounded-top-md-left-0"> <div class="card-body p-3 "> <p class="mb-0 text-dark"> ${data.message} </p> </div> </div> </div> </div> </div>`)
+                        var newMessage = $(`div[data-token="${data.token}"]`)[0]
+                        observer.observe(newMessage);
+                        var audio = new Audio('/notification.mp3');
+                        audio.play();
+                    }
+                }
+
+            },
+            read: function(token) { 
+                this.perform('read', {
+                    token: token
+                });
+            },
+            speak: function(message) {
+                return this.perform('speak', {
+                    message: message
+                });
+            }
+        });
+        function sendMessage(){
+            var input = $('[data-behavior~=user-help]')
+            Approom.speak(input.val());
+            input.val('')
+        }
+
+        $(document).on('click', '[data-send="send"]', sendMessage)
+        $(document).on('keypress', '[data-behavior~=user-help]', function(event) {
+            if (event.keyCode === 13) {
+                sendMessage()
+                event.preventDefault();
+            }
+        });
+        $(".chat-body").addClass("chat-body-visible");
+        window.simplebars()
+        setTimeout( function(){
+            const chatMessages = document.querySelectorAll('.unread');
+            chatMessages.forEach(function(chatMessage) {
+                observer.observe(chatMessage);
+            });
+        }, 5000)
+        const observer = new IntersectionObserver(function(entries) {
+            return entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                entry.target.classList.remove('unread');
+                entry.target.classList.add('read');
+                Approom.read(entry.target.dataset.token);
+                    return observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        window.onbeforeunload = closingCode;
+        function closingCode(){
+            Approom.unsubscribe()
+            return null;
+        }
+    })
+</script>

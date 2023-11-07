@@ -1,75 +1,23 @@
-<div class="chat-layout toggled" id="db-wrapper" data-current_user="true">
+<div class="chat-layout" id="db-wrapper">
   <main id="page-content" style="margin: 0;">
     <section class="container-fluid px-0">
       <div class="row g-0">
         <div class="col-xl-3 col-lg-12 col-md-12 col-12">
           <div class="bg-white border-end border-top vh-100">
             <div class=" chat-window">
-              <div data-simplebar="init" style="height: 100vh; overflow: auto;" class="simplebar-scrollable-y simplebar-scrollable-x simplebar-mouse-entered">
-                <div class="simplebar-wrapper" style="margin: 0px;">
-                  <div class="simplebar-height-auto-observer-wrapper">
-                    <div class="simplebar-height-auto-observer"></div>
-                  </div>
-                  <div class="simplebar-mask">
-                    <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
-                      <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content"
-                        style="height: 100%; overflow: scroll;">
-                        <div class="simplebar-content" style="padding: 0px;">
-                          <div class="tab-content" id="tabContent">
-                            <div class="tab-pane fade active show" id="recent" role="tabpanel"
-                              aria-labelledby="recent-tab">
-                              <ul class="list-unstyled contacts-list">
-                                <% @chatrooms.each do |chatroom| %>
-                                  <% if chatroom.chats.any? %>
-                                    <li class="bg-light py-3 px-4 chat-item contacts-item">
-                                      <div class="d-flex justify-content-between align-items-center helper-chat" data-info="<%= chatroom.id %>">
-                                        <%= link_to chat_path(id: chatroom.id), remote: true, class: 'text-link contacts-link' do %>
-                                          <div class="d-flex">
-                                            <div class=" ms-2">
-                                              <h5 class="mb-0"><%= chatroom.info %></h5>
-                                            </div>
-                                          </div>
-                                          <% end %>
-                                      </div>
-                                    </li>
-                                  <% end %>
-                                <% end %>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="chat-sticky-header sticky-top bg-white">
+                <ul class="nav nav-line-bottom" id="tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active py-2" id="recent-tab" data-bs-toggle="pill" href="#recent" role="tab" aria-controls="recent" aria-selected="true">Login user</a>
+                  </li>
+                </ul>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-9 col-lg-12 col-md-12 col-12">
-          <!-- chat list -->
-          <div class="chat-body w-100 vh-100 simplebar-scrollable-y" data-simplebar="init">
-            <div class="simplebar-wrapper" style="margin: 0px;">
-              <div class="simplebar-mask">
-                <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
-                  <div class="simplebar-content-wrapper" tabindex="0" role="region" style="    overflow: hidden scroll;"aria-label="scrollable content">
-                    <div class="simplebar-content" style="padding: 0px;">
-                      <div class="px-4 py-4 overflow-hidden" id='chats-info' style="height: 100%; overflow: hidden scroll;">
-                      </div>
-                      <div class="bg-light px-4 py-3 chat-footer mt-auto">
-                        <div class="bg-white p-2 rounded-3 shadow-sm">
-                            <div class="position-relative">
-                              <input data-behavior="user-help" class="form-control border-0 form-control-simple no-resize"
-                                placeholder="Type a New Message" rows="1">
-                            </div>
-                            <div class="position-absolute end-0 mt-n7 me-4">
-                              <button data-send="send" class="fs-3 btn text-primary btn-focus-none">
-                                <i class="fe fe-send"></i>
-                              </button>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
+              <div data-bar="" style="height: 100vh; overflow: auto;">
+                <div class="tab-content" id="tabContent">
+                  <div class="tab-pane fade show active" id="recent" role="tabpanel" aria-labelledby="recent-tab">
+                    <ul class="list-unstyled contacts-list">
+                      <%= render partial: 'user', collection: @chatrooms %>
+                    </ul>
                   </div>
                 </div>
               </div>
