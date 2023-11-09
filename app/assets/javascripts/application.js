@@ -4,7 +4,6 @@
 //= require jquery3
 //= require popper
 //= require bootstrap
-//= require cabMain
 //= require app_js/chat
 //= require app_js/simplebar.min
 //= require app_js/bootstrap.bundle.min
