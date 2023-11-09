@@ -1,3 +1,3 @@
-$redis = Redis.new(url:  "redis://76.74.202.201",
+$redis = Redis.new(url:  "redis://localhost",
                           port: 6379,
                           db:   0)
