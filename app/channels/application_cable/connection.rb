@@ -12,7 +12,7 @@ module ApplicationCable
       if verified_user = User.find_by(id: env['warden'].user.try(:id))
         verified_user
       else
-        #  reject_unauthorized_connection
+         reject_unauthorized_connection # if params[:room].blank?
       end
     end
   end
