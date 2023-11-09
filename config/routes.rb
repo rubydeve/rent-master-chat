@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+  mount ActionCable.server, at: '/cable'
   resources :chats
   get '/dashboard', to: 'chats#index'
   root 'chatrooms#index'
